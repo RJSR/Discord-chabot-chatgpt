@@ -35,7 +35,6 @@ client.on('messageCreate', async (message) => {
     // Se verifica si el mensaje proviene de un canal permitido o es un mensaje directo al bot
     if (!CHANNELS.includes(message.channelId) && !message.users.has(client.user.id)) return;
 
-    // Se indica que el bot está escribiendo en el canal
     await message.channel.sendTyping();
 
     // Se realiza una solicitud a la API de OpenAI para completar el contenido del mensaje
