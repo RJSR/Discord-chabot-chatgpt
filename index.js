@@ -4,15 +4,15 @@ require('dotenv/config');
 // Importa la clase Client de la biblioteca discord.js para la creación del bot de Discord
 const { Client } = require('discord.js');
 
-// Se importa la clase OpenAI para interactuar con la API de OpenAI
+// Se importa la clase OpenAI
 const { OpenAI } = require('openai');
 
-// Creación de una instancia del cliente de Discord
+// Se crea una instancia del cliente de Discord
 const client = new Client({
     intents: ['Guilds', 'GuildMembers', 'GuildMessages', 'MessageContent']
 });
 
-// Evento que se ejecuta cuando el bot se conecta exitosamente
+// Se ejecuta cuando el bot se conecta exitosamente
 client.on('ready', () => {
     console.log('El bot está conectado');
 });
@@ -28,11 +28,11 @@ const openai = new OpenAI({
 
 // Este evento ejecuta cuando se recibe un nuevo mensaje en cualquier canal
 client.on('messageCreate', async (message) => {
-    // Se ignoran los mensajes del propio bot y aquellos que comienzan con el prefijo definido
-    if (message.author.bot) return;
+
+    if (message.author.bot) return;     // Se ignoran los mensajes del propio bot
     if (message.content.startsWith(IGNORE_PREFIX)) return;
 
-    // Se verifica si el mensaje proviene de un canal permitido o es un mensaje directo al bot
+    // Se verifica si el mensaje proviene de un canal permitido
     if (!CHANNELS.includes(message.channelId) && !message.users.has(client.user.id)) return;
 
     await message.channel.sendTyping();
