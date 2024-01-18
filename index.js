@@ -37,25 +37,67 @@ client.on('messageCreate', async (message) => {
 
     await message.channel.sendTyping();
 
+    const sendTypingInterval = setInterval(() =>{
+        message.channel.sendTyping();
+    }, 5000);
+
+    let conversation = [];
+    conversation.push({
+        role: 'system',
+        content: 'Chat GPT is a friendly chatbot.'
+    })
+
+    let prevMessages = await message.channel.messages.fetch({ limit: 10});
+    prevMessages.reverse();
+
+    prevMessages.forEach((msg) => {
+        if (msg.author.bot && msg.author.id !== client.user.id) return;
+        if (msg.content.startsWith(IGNORE_PREFIX)) return;
+
+        const username = msg.author.username.replace(/\s+/g, '_').replace(/[^\w\s]/gi, '');
+
+        if (msg.author.id === client.user.id) {
+            conversation.push({
+                role: 'assistant',
+                name: username,
+                content: msg.content,
+            });
+
+            return;
+        }
+
+        conversation.push({
+            role: 'user',
+            name: 'username',
+            content: msg.content,
+
+        })
+    });
+
     // Se realiza una solicitud a la API de OpenAI para completar el contenido del mensaje
     const response = await openai.chat.completions
         .create({
             model: 'gpt-3.5-turbo',
-            messages: [
-                {
-                    role: 'system',
-                    content: 'Chat GPT is a friendly chatbot.'
-                },
-                {
-                    role: 'user',
-                    content: message.content,
-                }
-            ]
+            messages: conversation,
         })
         .catch((error) => console.error('OpenAI Error: \n', error));
 
+    clearInterval(sendTypingInterval);
+
+    if (!response) {
+        message.reply("Estoy teniendo problemas con la API de OpenAI, por favor intenta de nuevo en un momento");
+        return
+    }
     // Se responde al mensaje original con la respuesta generada por OpenAI
-    message.reply(response.choices[0].message.content);
+    const responseMessage = response.choices[0].message.content;
+    const chunkSizeLimit = 2000;
+
+    for (let i = 0; i < responseMessage.length; i+= chunkSizeLimit ){
+        const chunk = responseMessage.substring(i, i + chunkSizeLimit);
+        await message.reply(chunk);
+    }
+
+    message.reply();
 });
 
 // Se inicia sesión del bot con el token proporcionado en el archivo .env
