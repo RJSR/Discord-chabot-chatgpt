@@ -23,7 +23,7 @@ client.on('messageCreate', async (message) =>{
     if (message.content.startsWith(IGNORE_PREFIX)) return;
     if (!CHANNELS.includes(message.channelId) && !message.users.has(client.user.id)) return;
 
-    await message.channel.sendTyping();
+    //await message.channel.sendTyping();
 
     const response = await openai.chat.completions
         .create({
