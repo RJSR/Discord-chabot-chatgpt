@@ -18,7 +18,7 @@ client.on('ready', () => {
 });
 
 // Definición de constantes
-const IGNORE_PREFIX = "!"; 
+const IGNORE_PREFIX = "!";  //  Lista de prefijos a ignorar, por ejemplo '!hola' es ignorado.
 const CHANNELS = ['691845758835490878'];  // Lista de ID de canales permitidos
 
 // Se crea una instancia de OpenAI con la clave de API proporcionada en el archivo .env
@@ -35,18 +35,21 @@ client.on('messageCreate', async (message) => {
     // Se verifica si el mensaje proviene de un canal permitido
     if (!CHANNELS.includes(message.channelId) && !message.users.has(client.user.id)) return;
 
+    // Notificación del bot escribiendo el mensaje
     await message.channel.sendTyping();
 
     const sendTypingInterval = setInterval(() =>{
         message.channel.sendTyping();
-    }, 5000);
+    }, 5000); // Duración máxima de 5 segundos
 
+    // Declarar conversation, otorgando el rol de sistema al bot.
     let conversation = [];
     conversation.push({
         role: 'system',
         content: 'Chat GPT is a friendly chatbot.'
     })
 
+    // Obtener los ultimos 10 mensajes
     let prevMessages = await message.channel.messages.fetch({ limit: 10});
     prevMessages.reverse();
 
@@ -54,9 +57,11 @@ client.on('messageCreate', async (message) => {
         if (msg.author.bot && msg.author.id !== client.user.id) return;
         if (msg.content.startsWith(IGNORE_PREFIX)) return;
 
+
+        // Convertir los caracteres especiales y espacios del usuario en '_' para ser detectados por openai
         const username = msg.author.username.replace(/\s+/g, '_').replace(/[^\w\s]/gi, '');
 
-        if (msg.author.id === client.user.id) {
+        if (msg.author.id === client.user.id) { // El mensaje pertenece al bot.
             conversation.push({
                 role: 'assistant',
                 name: username,
@@ -66,7 +71,7 @@ client.on('messageCreate', async (message) => {
             return;
         }
 
-        conversation.push({
+        conversation.push({ // El mensaje pertenece al usuario
             role: 'user',
             name: 'username',
             content: msg.content,
@@ -80,23 +85,27 @@ client.on('messageCreate', async (message) => {
             model: 'gpt-3.5-turbo',
             messages: conversation,
         })
-        .catch((error) => console.error('OpenAI Error: \n', error));
+        .catch((error) => console.error('OpenAI Error: \n', error)); //Catch en consola para codigo de error.
 
     clearInterval(sendTypingInterval);
-
+    
+    // Mensaje de error como respuesta en discord.
     if (!response) {
         message.reply("Estoy teniendo problemas con la API de OpenAI, por favor intenta de nuevo en un momento");
         return
     }
-    // Se responde al mensaje original con la respuesta generada por OpenAI
+    
+    // Limitar a 2000 la cantidad de caracteres de respuesta
     const responseMessage = response.choices[0].message.content;
     const chunkSizeLimit = 2000;
 
-    for (let i = 0; i < responseMessage.length; i+= chunkSizeLimit ){
+    // División de respuesta en multiples mensajes
+    for (let i = 0; i < responseMessage.length; i+= chunkSizeLimit ){ 
         const chunk = responseMessage.substring(i, i + chunkSizeLimit);
         await message.reply(chunk);
     }
 
+    // Se responde al mensaje original con la respuesta generada por OpenAI
     message.reply();
 });
 
