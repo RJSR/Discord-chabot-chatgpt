@@ -1,7 +1,7 @@
 {
-  "name": "discord-chabot-chatgpt",
+  "name": "chatbotdiscordia",
   "version": "1.0.0",
-  "description": "Un chatbot usando la api de discord y chatgpt",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,8 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^14.14.1",
-    "dotenv": "^16.3.1",
-    "openai": "^4.24.7"
+    "axios": "^1.6.5",
+    "discord.js": "^14.14.1"
   }
 }
