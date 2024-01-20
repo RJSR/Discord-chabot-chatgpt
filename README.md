@@ -16,8 +16,9 @@ Inicialmente un bot de discord usando la API de OpenAI, luego refactorizado a us
 ### Requisitos previos:
 
 - Node.js y npm instalados
-- Un token de bot de Discord
+- Un token de bot de Discord. Obtenido al crear una app desde discord https://discord.com/developers/applications.
 - Una clave API de Llama Chat (opcional, para indicaciones personalizadas)
+- Hacer el setup del backend para llama-2 en https://github.com/diegoanvilla/llama-chat.
   
 ### Instala dependencias:
 
