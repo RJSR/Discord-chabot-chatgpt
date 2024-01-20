@@ -55,12 +55,3 @@ Inicialmente un bot de discord usando la API de OpenAI, luego refactorizado a us
 ## Licencia
 
 Licencia MIT: https://opensource.org/licenses/MIT: https://opensource.org/licenses/MIT
-
-
-Forkea el repositorio.
-Crea una rama para tus cambios.
-Realiza tus cambios y comitarlos.
-Envía una solicitud de extracción para su revisión.
-## Licencia
-
-Licencia MIT: https://opensource.org/licenses/MIT: https://opensource.org/licenses/MIT
