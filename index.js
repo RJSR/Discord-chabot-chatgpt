@@ -1,3 +1,5 @@
+// index 
+
 const { Client, GatewayIntentBits, Partials } = require("discord.js");
 const config = require("./config.json");
 const { default: axios } = require("axios");
