@@ -36,12 +36,7 @@ client.on("messageCreate", async (message) => {
         content:"algo salio mal"
     })
   }
-  fetch;
-  if ((message.content == "Hola") == "hola") {
-    return message.reply({
-      content: `Hola, ¿Cómo estás?\ncoloca el comando: /ingresando`,
-    });
-  }
+  
 });
 
 client
@@ -50,5 +45,5 @@ client
     console.log(`${client.user.username} Está Online.`);
   })
   .catch((err) => {
-    console.log(err, "Help estoy falland :C");
+    console.log(err, "Help estoy fallando :C");
   });
